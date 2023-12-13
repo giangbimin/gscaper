@@ -52,10 +52,12 @@ group :development, :test do
   gem "debug", platforms: %i[ mri windows ]
   gem 'byebug'
   gem 'dotenv-rails'
+end
+
+group :test do
   gem 'rspec-rails'
   gem 'factory_bot_rails'
   gem 'faker'
-  gem 'pry-rails'
   gem 'webmock'
   gem 'shoulda-matchers', '~> 5.0'
 end
