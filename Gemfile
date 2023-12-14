@@ -2,7 +2,7 @@ source "https://rubygems.org"
 
 ruby "3.2.2"
 
-gem "authentication-zero", "~> 3.0"
+gem "devise", "~> 4.9"
 
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
 gem "rails", "~> 7.1.2"
@@ -74,5 +74,5 @@ group :development do
   # Speed up commands on slow machines / big apps [https://github.com/rails/spring]
   # gem "spring"
   gem "rubocop-rails", "~> 2.22"
+  gem "brakeman", "~> 6.1"
 end
-
