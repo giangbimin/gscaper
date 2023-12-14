@@ -7,8 +7,6 @@
 
       <div class="mt-5">
         <%= form_for(resource, as: resource_name, url: confirmation_path(resource_name), html: { method: :post }) do |f| %>
-          <%= render "devise/shared/error_messages", resource: resource %>
-
           <div class="grid gap-y-4">
 
             <!-- Form Group -->
@@ -22,6 +20,9 @@
                   </svg>
                 </div>
               </div>
+              <% if resource.errors && resource.errors[:email] %>
+                <p data-turbo-cache="false" class="text-xs text-red-600 mt-2"><%= resource.errors[:email].join(", ")%></p>
+              <% end %>
             </div>
             <!-- End Form Group -->
 

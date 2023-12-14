@@ -7,11 +7,8 @@
 
     <div class="mt-5">
       <%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :put }) do |f| %>
-        <%= render "devise/shared/error_messages", resource: resource %>
         <%= f.hidden_field :reset_password_token %>
-
         <div class="grid gap-y-4">
-
           <!-- Form Group -->
           <div>
             <div class="relative">
@@ -25,6 +22,9 @@
                 </svg>
               </div>
             </div>
+            <% if resource.errors && resource.errors[:password] %>
+              <p data-turbo-cache="false" class="text-xs text-red-600 mt-2"><%= resource.errors[:password].join(", ")%></p>
+            <% end %>
           </div>
           <!-- End Form Group -->
 
@@ -41,6 +41,9 @@
                 </svg>
               </div>
             </div>
+            <% if resource.errors && resource.errors[:password_confirmation] %>
+              <p data-turbo-cache="false" class="text-xs text-red-600 mt-2"><%= resource.errors[:password_confirmation].join(", ")%></p>
+            <% end %>
           </div>
           <!-- End Form Group -->
 

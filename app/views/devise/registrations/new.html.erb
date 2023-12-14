@@ -5,16 +5,12 @@
         <h1 class="block text-2xl font-bold text-gray-800 dark:text-white">Sign up</h1>
         <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">
           Already have an account?
-          <a class="text-blue-600 decoration-2 hover:underline font-medium dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600" href="#">
-            Sign in here
-          </a>
+          <%= link_to "Sign in here", new_session_path(resource_name), class: "text-blue-600 decoration-2 hover:underline font-medium dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600" %>
         </p>
       </div>
 
       <div class="mt-5">
         <%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
-          <%= render "devise/shared/error_messages", resource: resource %>
-
           <div class="grid gap-y-4">
             <!-- Form Group -->
             <div>
@@ -27,6 +23,9 @@
                   </svg>
                 </div>
               </div>
+              <% if resource.errors && resource.errors[:email] %>
+                <p data-turbo-cache="false" class="text-xs text-red-600 mt-2"><%= resource.errors[:email].join(", ")%></p>
+              <% end %>
             </div>
             <!-- End Form Group -->
 
@@ -43,8 +42,8 @@
                   </svg>
                 </div>
               </div>
-              <% if @minimum_password_length %>
-                <p class="text-xs text-red-600 mt-2"><%= @minimum_password_length %> characters minimum</p>
+              <% if resource.errors && resource.errors[:password] %>
+                <p data-turbo-cache="false" class="text-xs text-red-600 mt-2"><%= resource.errors[:password].join(", ")%></p>
               <% end %>
             </div>
             <!-- End Form Group -->
@@ -62,6 +61,9 @@
                   </svg>
                 </div>
               </div>
+              <% if resource.errors && resource.errors[:password_confirmation] %>
+                <p data-turbo-cache="false" class="text-xs text-red-600 mt-2"><%= resource.errors[:password_confirmation].join(", ")%></p>
+              <% end %>
             </div>
             <!-- End Form Group -->
 
