@@ -1,0 +1,18 @@
+<% if flash.any? %>
+  <% flash.each do |type, message| %>
+    <div data-controller='flash-message' class="bg-blue-600 text-sm text-white rounded-lg p-4 dark:bg-blue-500" role="alert">
+      <span class="font-bold"><%= type %></span> <%= message %>
+    </div>
+  <% end %>
+<% end %>
+
+<% if notice %>
+  <div data-controller='flash-message' class="bg-red-500 text-sm text-white rounded-lg p-4" role="alert">
+    <span class="font-bold">Notice</span> <%= notice %>
+  </div>
+<% end %>
+<% if alert %>
+  <div data-controller='flash-message' class="bg-teal-500 text-sm text-white rounded-lg p-4" role="alert">
+    <span class="font-bold">Alert</span><%= alert %>
+  </div>
+<% end %>
