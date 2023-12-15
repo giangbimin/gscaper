@@ -67,6 +67,7 @@ group :test do
   gem 'faker'
   gem 'webmock'
   gem 'shoulda-matchers', '~> 5.0'
+  gem 'database_cleaner-active_record'
 end
 
 group :development do
