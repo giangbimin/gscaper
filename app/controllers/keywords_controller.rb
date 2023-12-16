@@ -25,9 +25,6 @@ class KeywordsController < ApplicationController
 
   private
 
-  def set_keyword
-  end
-
   def keyword_params
     params.require(:keyword).permit(:content)
   end

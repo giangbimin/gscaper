@@ -37,9 +37,9 @@ RSpec.describe '/keywords', type: :request do
   describe 'POST /create' do
     context 'with valid parameters' do
       it 'creates a new Keyword' do
-        expect {
+        expect do
           post keywords_url, params: { keyword: valid_attributes }
-        }.to change(Keyword, :count).by(1)
+        end.to change(Keyword, :count).by(1)
       end
 
       it 'redirects to the created keyword' do
@@ -50,9 +50,9 @@ RSpec.describe '/keywords', type: :request do
 
     context 'with invalid parameters' do
       it 'does not create a new Keyword' do
-        expect {
+        expect do
           post keywords_url, params: { keyword: invalid_attributes }
-        }.to change(Keyword, :count).by(0)
+        end.to change(Keyword, :count).by(0)
       end
 
       it 'renders a response with 400 status (i.e. to display the :new template)' do
