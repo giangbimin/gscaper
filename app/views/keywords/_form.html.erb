@@ -1,20 +1,11 @@
-<%= form_with(model: keyword, class: "contents") do |form| %>
-  <% if keyword.errors.any? %>
-    <div id="error_explanation" class="bg-red-50 text-red-500 px-3 py-2 font-medium rounded-lg mt-3">
-      <h2><%= pluralize(keyword.errors.count, "error") %> prohibited this keyword from being saved:</h2>
-
-      <ul>
-        <% keyword.errors.each do |error| %>
-          <li><%= error.full_message %></li>
-        <% end %>
-      </ul>
-    </div>
-  <% end %>
-
+<%= form_with(url: keywords_path, class: "contents") do |form| %>
   <div class="my-5">
-    <%= form.label :content %>
-    <%= form.text_field :content, class: "block shadow rounded-md border border-gray-200 outline-none px-3 py-2 mt-2 w-full" %>
+    <%= form.label :file, "Upload CSV Keywords", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white"  %>
+    <%= form.file_field :file, accept: 'text/csv', required: true, class: "block w-full text-sm text-gray-500 file:me-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-600 file:text-white hover:file:bg-blue-700 file:disabled:opacity-50 file:disabled:pointer-events-none dark:file:bg-blue-500 dark:hover:file:bg-blue-400" %>
+    <p p class="mt-1 text-sm text-gray-500 dark:text-gray-300" id="">format CSV (MAX 100 lines)</p>
   </div>
+
+  <%= render "preview", keywords: @keywords %>
 
   <div class="inline">
     <%= form.submit class: "rounded-lg py-3 px-5 bg-blue-600 text-white inline-block font-medium cursor-pointer" %>

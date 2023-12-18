@@ -1,0 +1,9 @@
+  <%= turbo_frame_tag "new_keywords" do %>
+    <div class="my-5">
+      <% if keywords.present? %>
+        <% keywords.each do |keyword| %>
+          <span class="inline-flex items-center gap-x-1.5 py-1.5 px-3 rounded-md text-xs font-medium border border-gray-200 bg-white text-gray-800 shadow-sm dark:bg-slate-900 dark:border-gray-700 dark:text-white"><%= keyword %></span>
+        <% end %>
+      <% end %>
+    </div>
+  <% end %>
