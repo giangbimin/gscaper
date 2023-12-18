@@ -32,35 +32,40 @@ RSpec.describe '/keywords', type: :request do
     end
   end
 
-  let(:valid_attributes) { { content: 'google' } }
-  let(:invalid_attributes) { {} }
+  let(:valid_file) { fixture_file_upload('/csv/sample.csv', 'text/csv') }
+  let(:invalid_file) { fixture_file_upload('/csv/many.csv', 'text/csv') }
 
   describe 'POST /create' do
-    let(:file) { { file: fixture_file_upload('/csv/full.csv', 'text/csv') } }
     context 'with valid parameters' do
-      # it 'creates a new Keyword' do
-      #   expect do
-      #     post keywords_url, params: { file: file }
-      #   end.to change(Keyword, :count).by(1)
-      # end
+      it 'creates a new Keyword' do
+        expect do
+          post keywords_url, params: { file: valid_file }
+        end.to change(Keyword, :count).by(3)
+      end
+
+      it 'creates a new Userkeyword' do
+        expect do
+          post keywords_url, params: { file: valid_file }
+        end.to change(UserKeyword, :count).by(3)
+      end
 
       it 'redirects to the created keyword' do
-        post keywords_url, params: { file: file }
+        post keywords_url, params: { file: valid_file }
         expect(response).to redirect_to(keywords_url)
       end
     end
 
-    # context 'with invalid parameters' do
-    #   it 'does not create a new Keyword' do
-    #     expect do
-    #       post keywords_url, params: { keyword: invalid_attributes }
-    #     end.to change(Keyword, :count).by(0)
-    #   end
+    context 'with invalid parameters' do
+      it 'does not create a new Keyword' do
+        expect do
+          post keywords_url, params: { file: invalid_file }
+        end.to change(Keyword, :count).by(0)
+      end
 
-    #   it 'renders a response with 400 status (i.e. to display the :new template)' do
-    #     post keywords_url, params: { keyword: invalid_attributes }
-    #     expect(response).to have_http_status(:bad_request)
-    #   end
-    # end
+      it 'renders a response with 422 status (i.e. to display the :new template)' do
+        post keywords_url, params: { file: invalid_file }
+        expect(response).to have_http_status(:unprocessable_entity)
+      end
+    end
   end
 end

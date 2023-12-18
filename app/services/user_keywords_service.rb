@@ -1,8 +1,8 @@
 class UserKeywordsService
   attr_reader :keywords, :errors
 
-  def initialize(user_id, file)
-    @user_id = user_id
+  def initialize(user, file)
+    @user = user
     @file = file
     @errors = {}
   end
@@ -43,7 +43,7 @@ class UserKeywordsService
 
   def create_keyword(content)
     keyword_id = Keyword.find_or_create_by(content: content).id
-    UserKeyword.find_or_create_by(user: @user_id, keyword_id: keyword_id)
+    UserKeyword.find_or_create_by(user: @user, keyword_id: keyword_id)
     keyword_id
   end
 

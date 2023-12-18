@@ -12,7 +12,7 @@ class KeywordsController < ApplicationController
   end
 
   def create
-    service = UserKeywordsService.new(current_user.id, keyword_params[:file])
+    service = UserKeywordsService.new(current_user, keyword_params[:file])
     service.execute
     respond_to do |format|
       if service.status
