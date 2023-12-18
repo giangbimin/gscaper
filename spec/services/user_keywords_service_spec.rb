@@ -1,6 +1,15 @@
 require 'rails_helper'
+require 'sidekiq/testing'
 
 RSpec.describe UserKeywordsService, type: :model do
+  before do
+    Sidekiq::Testing.fake!
+  end
+
+  after do
+    Sidekiq::Testing.inline!
+  end
+
   describe '#execute' do
     let(:user) { create(:user) }
     let(:many_records) { fixture_file_upload('/csv/many.csv', 'text/csv') }

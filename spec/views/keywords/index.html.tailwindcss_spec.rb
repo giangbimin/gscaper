@@ -2,6 +2,8 @@ require 'rails_helper'
 
 RSpec.describe 'keywords/index', type: :view do
   before(:each) do
+    current_user = FactoryBot.create(:user)
+    sign_in current_user
     assign(:keywords, [
              Keyword.create!(
                content: 'Keyword content 1',
