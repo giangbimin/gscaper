@@ -1,6 +1,6 @@
 class KeywordsController < ApplicationController
   def index
-    @keywords = Keyword.all
+    @keywords = current_user.keywords
   end
 
   def show
@@ -8,16 +8,16 @@ class KeywordsController < ApplicationController
   end
 
   def new
-    @keyword = Keyword.new
+    @keywords = []
   end
 
   def create
-    @keyword = Keyword.new(keyword_params)
-
+    status, errors = execute_keyword_service
     respond_to do |format|
-      if @keyword.save
-        format.html { redirect_to keyword_url(@keyword), notice: 'Keyword was successfully created.' }
+      if status
+        format.html { redirect_to keywords_url, notice: 'Keywords was successfully created.' }
       else
+        flash.alert = errors.values[0]
         format.html { render :new, status: :unprocessable_entity }
       end
     end
@@ -26,10 +26,12 @@ class KeywordsController < ApplicationController
   private
 
   def keyword_params
-    params.require(:keyword).permit(:content)
+    params.permit(:file)
   end
 
-  def keywords_file_params
-    params.require(:keywords).permit(:file)
+  def execute_keyword_service
+    service = UserKeywordsService.new(current_user, keyword_params[:file])
+    service.execute
+    [service.status, service.errors]
   end
 end

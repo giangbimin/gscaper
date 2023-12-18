@@ -7,7 +7,8 @@ RSpec.describe '/keywords', type: :request do
   end
 
   describe 'GET /index' do
-    let(:keyword) { FactoryBot.create(:keyword) }
+    let(:keyword) { FactoryBot.create(:keyword, user: current_user) }
+    let(:user_keyword) { FactoryBot.create(:user_keyword, user: current_user, keyword: keyword) }
 
     it 'renders a successful response' do
       get keywords_url
@@ -31,33 +32,39 @@ RSpec.describe '/keywords', type: :request do
     end
   end
 
-  let(:valid_attributes) { { content: 'google' } }
-  let(:invalid_attributes) { {} }
+  let(:valid_file) { fixture_file_upload('/csv/sample.csv', 'text/csv') }
+  let(:invalid_file) { fixture_file_upload('/csv/many.csv', 'text/csv') }
 
   describe 'POST /create' do
     context 'with valid parameters' do
       it 'creates a new Keyword' do
         expect do
-          post keywords_url, params: { keyword: valid_attributes }
-        end.to change(Keyword, :count).by(1)
+          post keywords_url, params: { file: valid_file }
+        end.to change(Keyword, :count).by(3)
+      end
+
+      it 'creates a new Userkeyword' do
+        expect do
+          post keywords_url, params: { file: valid_file }
+        end.to change(UserKeyword, :count).by(3)
       end
 
       it 'redirects to the created keyword' do
-        post keywords_url, params: { keyword: valid_attributes }
-        expect(response).to redirect_to(keyword_url(Keyword.last))
+        post keywords_url, params: { file: valid_file }
+        expect(response).to redirect_to(keywords_url)
       end
     end
 
     context 'with invalid parameters' do
       it 'does not create a new Keyword' do
         expect do
-          post keywords_url, params: { keyword: invalid_attributes }
+          post keywords_url, params: { file: invalid_file }
         end.to change(Keyword, :count).by(0)
       end
 
-      it 'renders a response with 400 status (i.e. to display the :new template)' do
-        post keywords_url, params: { keyword: invalid_attributes }
-        expect(response).to have_http_status(:bad_request)
+      it 'renders a response with 422 status (i.e. to display the :new template)' do
+        post keywords_url, params: { file: invalid_file }
+        expect(response).to have_http_status(:unprocessable_entity)
       end
     end
   end
