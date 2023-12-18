@@ -1,23 +1,19 @@
 require 'csv'
 
-class CsvKeywordsParserService
+class CsvKeywordsParserService < ApplicationService
+  attr_reader :file, :keywords
+
   def initialize(file)
     @file = file
     @keywords = []
-    @errors = {}
+    super
   end
-
-  attr_reader :file, :errors, :keywords
 
   def execute
     validate
     return [] unless status
 
     parse
-  end
-
-  def status
-    errors.blank?
   end
 
   private
@@ -33,7 +29,7 @@ class CsvKeywordsParserService
   def parse
     CSV.read(file.tempfile).flatten.uniq.compact.reject(&:empty?).uniq
   rescue StandardError => e
-    @errors[:base] = "Error: #{e}"
+    @errors[:base] = e.message
     []
   end
 end

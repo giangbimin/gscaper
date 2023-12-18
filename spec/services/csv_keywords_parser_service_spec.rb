@@ -11,7 +11,7 @@ RSpec.describe CsvKeywordsParserService do
     context 'with valid parameters' do
       context 'with 1 keyword' do
         it 'return list of keywords' do
-          service = CsvKeywordsParserService.new(single_record)
+          service = described_class.new(single_record)
           keywords = service.execute
           expect(keywords.count).to eq(1)
           expect(service.status).to be(true)
@@ -19,7 +19,7 @@ RSpec.describe CsvKeywordsParserService do
       end
       context 'with 100 keywords' do
         it 'return list of keywords' do
-          service = CsvKeywordsParserService.new(hundred_records)
+          service = described_class.new(hundred_records)
           keywords = service.execute
           expect(keywords.count).to eq(100)
           expect(service.status).to be(true)
@@ -30,7 +30,7 @@ RSpec.describe CsvKeywordsParserService do
     context 'with invalid parameters' do
       context 'incorrect file is nil' do
         it 'have status false with errors' do
-          service = CsvKeywordsParserService.new(nil)
+          service = described_class.new(nil)
           keywords = service.execute
           expect(keywords.count).to eq(0)
           expect(service.status).to be(false)
@@ -40,7 +40,7 @@ RSpec.describe CsvKeywordsParserService do
 
       context 'incorrect file type' do
         it 'have status false with errors' do
-          service = CsvKeywordsParserService.new(text_file)
+          service = described_class.new(text_file)
           keywords = service.execute
           expect(keywords.count).to eq(0)
           expect(service.status).to be(false)
@@ -50,7 +50,7 @@ RSpec.describe CsvKeywordsParserService do
 
       context 'with too many keywords' do
         it 'have status false with errors' do
-          service = CsvKeywordsParserService.new(many_records)
+          service = described_class.new(many_records)
           keywords = service.execute
           expect(keywords.count).to eq(0)
           expect(service.status).to be(false)
@@ -60,7 +60,7 @@ RSpec.describe CsvKeywordsParserService do
 
       # context 'with keyword too long' do
       #   it 'have status false with errors' do
-      #     service = CsvKeywordsParserService.new(too_long)
+      #     service = described_class.new(too_long)
       #     keywords = service.execute
       #     expect(keywords.count).to eq(0)
       #     expect(service.status).to be(false)

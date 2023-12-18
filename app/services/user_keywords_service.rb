@@ -1,10 +1,11 @@
-class UserKeywordsService
+class UserKeywordsService < ApplicationService
+  JOB_INTERVAL = 2
   attr_reader :keywords, :errors
 
   def initialize(user, file)
     @user = user
     @file = file
-    @errors = {}
+    super
   end
 
   def execute
@@ -15,10 +16,6 @@ class UserKeywordsService
     return unless status
 
     perform_scraper
-  end
-
-  def status
-    errors.blank?
   end
 
   private
@@ -38,7 +35,7 @@ class UserKeywordsService
     end
   rescue StandardError => e
     @keyword_ids = []
-    errors[:base] = "Errors: #{e}"
+    errors[:base] = e.message
   end
 
   def create_keyword(content)
@@ -47,5 +44,9 @@ class UserKeywordsService
     keyword_id
   end
 
-  def perform_scraper; end
+  def perform_scraper
+    @keyword_ids.compact.each_with_index do |keyword_id, index|
+      KeywordScraperJob.perform_in((index * JOB_INTERVAL).seconds, keyword_id)
+    end
+  end
 end
