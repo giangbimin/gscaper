@@ -34,7 +34,7 @@ RSpec.describe CsvKeywordsParserService do
           keywords = service.execute
           expect(keywords.count).to eq(0)
           expect(service.status).to be(false)
-          expect(service.errors[:base]).equal?('File is required')
+          expect(service.errors[:base]).to eq('File is required')
         end
       end
 
@@ -44,7 +44,7 @@ RSpec.describe CsvKeywordsParserService do
           keywords = service.execute
           expect(keywords.count).to eq(0)
           expect(service.status).to be(false)
-          expect(service.errors[:base]).equal?('File type should be valid CSV')
+          expect(service.errors[:base]).to eq('File type should be valid CSV')
         end
       end
 
@@ -54,7 +54,7 @@ RSpec.describe CsvKeywordsParserService do
           keywords = service.execute
           expect(keywords.count).to eq(0)
           expect(service.status).to be(false)
-          expect(service.errors[:base]).equal?('keyword number 0 is too long')
+          expect(service.errors[:base]).to eq('Total keywords must between 1 and 100')
         end
       end
 
@@ -64,7 +64,7 @@ RSpec.describe CsvKeywordsParserService do
       #     keywords = service.execute
       #     expect(keywords.count).to eq(0)
       #     expect(service.status).to be(false)
-      #     expect(service.errors[:base]).to be('keyword number 0 is too long')
+      #     expect(service.errors[:base]).to eq('keyword number 0 is too long')
       #   end
       # end
     end

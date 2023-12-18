@@ -23,9 +23,29 @@ class UserKeywordsService
 
   private
 
-  def filter_keywords; end
+  def filter_keywords
+    csv_parser_service = CsvKeywordsParserService.new(@file)
+    @keyword_list = csv_parser_service.execute
+    errors.merge!(csv_parser_service.errors) unless csv_parser_service.status
+  end
 
-  def save_keywords; end
+  def save_keywords
+    @keyword_ids = []
+    ActiveRecord::Base.transaction do
+      @keyword_list.each do |content|
+        @keyword_ids << create_keyword(content)
+      end
+    end
+  rescue StandardError => e
+    @keyword_ids = []
+    errors[:base] = "Errors: #{e}"
+  end
+
+  def create_keyword(content)
+    keyword_id = Keyword.find_or_create_by(content: content).id
+    UserKeyword.find_or_create_by(user: @user_id, keyword_id: keyword_id)
+    keyword_id
+  end
 
   def perform_scraper; end
 end
