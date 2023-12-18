@@ -12,12 +12,12 @@ class KeywordsController < ApplicationController
   end
 
   def create
-    service = UserKeywordsService.new(current_user, keyword_params[:file])
-    service.execute
+    status, errors = execute_keyword_service
     respond_to do |format|
-      if service.status
+      if status
         format.html { redirect_to keywords_url, notice: 'Keywords was successfully created.' }
       else
+        flash.alert = errors.values[0]
         format.html { render :new, status: :unprocessable_entity }
       end
     end
@@ -27,5 +27,11 @@ class KeywordsController < ApplicationController
 
   def keyword_params
     params.permit(:file)
+  end
+
+  def execute_keyword_service
+    service = UserKeywordsService.new(current_user, keyword_params[:file])
+    service.execute
+    [service.status, service.errors]
   end
 end
