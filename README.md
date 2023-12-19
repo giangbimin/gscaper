@@ -21,7 +21,7 @@
 [x] Authenticated users can upload a CSV file of keywords. This upload file can be in any size from 1 to 100 keywords.
 [x] The uploaded file contains keywords, each of those keywords will be used to search on <http://www.google.com> and they will start to run as soon as they’re uploaded.
 [x] For each search result/keyword result page on Google, you will store the following information on the first page of results: Total number of AdWords advertisers on the page, Total number of links (all of them) on the page, Total of search results for this keyword e.g. About 21,600,000 results (0.42 seconds), HTML code of the page/cache of the page.
-[ ] Allow users to view the list of their uploaded keywords. For each keyword, users can also view the search result information stored in the database.
+[x] Allow users to view the list of their uploaded keywords. For each keyword, users can also view the search result information stored in the database.
 
 - Tech
 
