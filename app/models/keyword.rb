@@ -3,6 +3,6 @@ class Keyword < ApplicationRecord
   enum status: { pending: 0, processed: 1, failed: 2 }
   validates :content, presence: true, uniqueness: true
 
-  default_scope { order(updated_at: :desc) }
+  default_scope { order(id: :desc) }
   scope :search, ->(query) { where('"keywords"."content" LIKE ?', "%#{sanitize_sql_like(query)}%") }
 end

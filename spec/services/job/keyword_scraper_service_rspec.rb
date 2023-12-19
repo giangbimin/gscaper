@@ -56,6 +56,20 @@ RSpec.describe Job::KeywordScraperService, type: :service do
       end
     end
 
+    context 'when the keyword is already processed but force refresh' do
+      let(:keyword) { create(:keyword, content: content, status: :processed) }
+      before do
+        allow(ScraperService).to receive_message_chain(:new, :execute).and_return(scraper_service_response)
+        allow(ScraperService).to receive_message_chain(:new, :status).and_return(true)
+      end
+
+      it 'does not call scraping and update_keyword' do
+        service.force_refresh = true
+        execute_service
+        expect(service.status).to eq(true)
+      end
+    end
+
     context 'when an exception occurs during scraping' do
       before do
         allow(ScraperService).to receive_message_chain(:new, :execute).and_raise(StandardError, 'Some error')

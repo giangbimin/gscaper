@@ -45,6 +45,16 @@ RSpec.describe '/keywords', type: :request do
     end
   end
 
+  describe 'POST /refresh' do
+    let!(:keyword) { create(:keyword) }
+    let!(:user_keyword) { create(:user_keyword, user: current_user, keyword: keyword) }
+
+    it 'renders a successful response' do
+      post keyword_refresh_url(keyword)
+      expect(response).to be_successful
+    end
+  end
+
   describe 'GET /new' do
     it 'renders a successful response' do
       get new_keyword_url
