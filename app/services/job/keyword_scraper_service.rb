@@ -1,16 +1,18 @@
 module Job
   class KeywordScraperService < ApplicationService
     attr_reader :keyword, :scraper_response
+    attr_accessor :force_refresh
 
     def initialize(keyword_id)
       @keyword_id = keyword_id
+      @force_refresh = force_refresh
       super
     end
 
     def execute
       find_keyword
       return unless status
-      return if keyword.processed?
+      return if keyword.processed? && !force_refresh
 
       scraping
       update_keyword

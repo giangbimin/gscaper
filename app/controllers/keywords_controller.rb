@@ -1,14 +1,13 @@
 class KeywordsController < ApplicationController
+  before_action :find_keyword, only: %i[show refresh]
+
   def index
     keywords = current_user.keywords
     keywords = keywords.search(search_params[:query]) if search_params[:query].present?
     @pagy, @keywords = pagy(keywords)
   end
 
-  def show
-    @keyword = current_user.keywords.find_by(id: params[:id])
-    render file: Rails.public_path.join('404.html').to_s, status: :not_found, layout: false unless @keyword
-  end
+  def show; end
 
   def new
     @keywords = []
@@ -27,9 +26,8 @@ class KeywordsController < ApplicationController
   end
 
   def refresh
-    keyword = current_user.keywords.find_by(id: params[:keyword_id])
-    jid = KeywordScraperJob.perform_async(keyword.id)
-    render json: { jid: jid }
+    jid = KeywordScraperJob.perform_async(@keyword.id)
+    render json: { jid: jid }, status: :ok
   end
 
   private
@@ -46,5 +44,10 @@ class KeywordsController < ApplicationController
     service = UserKeywordsService.new(current_user, keyword_params[:file])
     service.execute
     [service.status, service.errors]
+  end
+
+  def find_keyword
+    @keyword = current_user.keywords.find_by(id: params[:id] || params[:keyword_id])
+    render file: Rails.public_path.join('404.html').to_s, status: :not_found, layout: false unless @keyword
   end
 end
