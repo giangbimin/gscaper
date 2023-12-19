@@ -38,9 +38,9 @@ RSpec.describe JwtService, type: :service do
     context 'with an invalid token' do
       it 'raises a DecodeError' do
         invalid_token = 'invalid_token'
-        expect {
+        expect do
           described_class.decode(invalid_token)
-        }.to raise_error(JwtService::DecodeError)
+        end.to raise_error(JwtService::DecodeError)
       end
     end
   end

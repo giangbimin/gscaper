@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe '/keywords', type: :request do
-  let(:current_user) {create(:user)}
+  let(:current_user) { create(:user) }
   before(:each) do
     sign_in current_user
   end
