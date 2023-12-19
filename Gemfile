@@ -3,6 +3,8 @@ source 'https://rubygems.org'
 ruby '3.2.2'
 
 gem 'devise', '~> 4.9'
+gem 'jwt'
+gem "rack-cors", "~> 2.0"
 
 gem 'httparty', '~> 0.21.0'
 gem 'nokogiri', '~> 1.15', '>= 1.15.5'

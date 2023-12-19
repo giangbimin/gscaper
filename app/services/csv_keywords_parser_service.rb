@@ -19,7 +19,7 @@ class CsvKeywordsParserService < ApplicationService
   private
 
   def validate
-    return errors[:base] = 'File is required' unless file
+    return errors[:base] = 'File is required' if file.blank?
     return errors[:base] = 'File type should be valid CSV' unless file.content_type == 'text/csv'
     return if CSV.read(file.tempfile).count.between?(1, 100)
 

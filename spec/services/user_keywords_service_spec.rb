@@ -1,7 +1,7 @@
 require 'rails_helper'
 require 'sidekiq/testing'
 
-RSpec.describe UserKeywordsService, type: :model do
+RSpec.describe UserKeywordsService, type: :service do
   before do
     Sidekiq::Testing.fake!
   end

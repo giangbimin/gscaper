@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe CsvKeywordsParserService do
+RSpec.describe CsvKeywordsParserService, type: :service do
   describe '#execute' do
     let(:single_record) { fixture_file_upload('/csv/single.csv', 'text/csv') }
     let(:too_long) { fixture_file_upload('/csv/too_long.csv', 'text/csv') }

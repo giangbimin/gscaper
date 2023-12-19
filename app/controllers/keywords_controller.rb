@@ -4,7 +4,8 @@ class KeywordsController < ApplicationController
   end
 
   def show
-    @keyword = Keyword.find(params[:id])
+    @keyword = current_user.keywords.find_by(id: params[:id])
+    render file: Rails.public_path.join('404.html').to_s, status: :not_found, layout: false unless @keyword
   end
 
   def new
