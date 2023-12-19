@@ -4,6 +4,7 @@ ruby '3.2.2'
 
 gem 'devise', '~> 4.9'
 gem 'jwt'
+gem "pagy", "~> 6.2"
 gem "rack-cors", "~> 2.0"
 
 gem 'httparty', '~> 0.21.0'

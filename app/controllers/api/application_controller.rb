@@ -1,6 +1,8 @@
 module Api
   class ApplicationController < ActionController::API
     include ActionController::MimeResponds
+    include Pagy::Backend
+
     respond_to :json
 
     before_action :jwt_authenticate!
