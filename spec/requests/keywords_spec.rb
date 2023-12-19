@@ -11,6 +11,7 @@ RSpec.describe '/keywords', type: :request do
     let!(:user_keyword) { create(:user_keyword, user: current_user, keyword: keyword) }
     context 'without params search' do
       it 'renders a successful response' do
+        get keywords_url
         expect(response).to be_successful
       end
     end
