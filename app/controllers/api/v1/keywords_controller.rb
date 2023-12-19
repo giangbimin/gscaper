@@ -3,9 +3,13 @@ module Api
     class KeywordsController < Api::ApplicationController
       def index
         keywords = @current_user.keywords
-                                .select(:id, :content, :status, :total_link, :total_result, :total_ad)
-                                .as_json(except: %i[created_at updated_at html_code])
-        render json: { data: keywords }, status: :ok
+        keywords = keywords.search(search_params[:query]) if search_params[:query].present?
+        pagy, keywords = pagy(keywords)
+        render json: {
+          data: keywords.select(:id, :content, :status, :total_link, :total_result, :total_ad)
+                        .as_json(except: %i[created_at updated_at html_code]),
+          meta_data: { page: pagy.page, per_page: pagy.items, total: pagy.count }
+        }, status: :ok
       end
 
       def show
@@ -30,6 +34,10 @@ module Api
 
       def keyword_params
         params.permit(:file)
+      end
+
+      def search_params
+        params.permit(:query)
       end
 
       def execute_keyword_service

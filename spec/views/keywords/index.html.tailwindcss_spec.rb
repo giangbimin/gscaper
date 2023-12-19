@@ -2,24 +2,13 @@ require 'rails_helper'
 
 RSpec.describe 'keywords/index', type: :view do
   before(:each) do
-    current_user = FactoryBot.create(:user)
+    current_user = create(:user)
+    keywords = [
+      create(:keyword, content: 'Keyword content 1', status: :processed, total_link: 3, total_result: 2, total_ad: 4),
+      create(:keyword, content: 'Keyword content 2', status: :pending, total_link: 3, total_result: 2, total_ad: 4)
+    ]
     sign_in current_user
-    assign(:keywords, [
-             Keyword.create!(
-               content: 'Keyword content 1',
-               status: :processed,
-               total_link: 3,
-               total_result: 2,
-               total_ad: 4
-             ),
-             Keyword.create!(
-               content: 'Keyword content 2',
-               status: :pending,
-               total_link: 3,
-               total_result: 2,
-               total_ad: 4
-             )
-           ])
+    assign(:keywords, keywords)
   end
 
   it 'renders a list of keywords' do

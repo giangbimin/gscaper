@@ -9,10 +9,23 @@ RSpec.describe '/keywords', type: :request do
   describe 'GET /index' do
     let!(:keyword) { create(:keyword) }
     let!(:user_keyword) { create(:user_keyword, user: current_user, keyword: keyword) }
+    context 'without params search' do
+      it 'renders a successful response' do
+        get keywords_url
+        expect(response).to be_successful
+      end
+    end
 
-    it 'renders a successful response' do
-      get keywords_url
-      expect(response).to be_successful
+    context 'with params search' do
+      it 'renders a successful response' do
+        get keywords_url, params: { query: keyword.content }
+        expect(response).to be_successful
+      end
+
+      it 'return blank with notfound params' do
+        get keywords_url, params: { query: 'xxxxxx' }
+        expect(response).to be_successful
+      end
     end
   end
 

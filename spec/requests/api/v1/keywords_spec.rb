@@ -9,10 +9,29 @@ RSpec.describe '/api/v1/keywords', type: :request do
     let!(:keyword) { create(:keyword) }
     let!(:user_keyword) { create(:user_keyword, user: current_user, keyword: keyword) }
 
-    it 'renders a successful response' do
-      get '/api/v1/keywords', headers: headers
-      expect(response).to be_successful
-      expect(response.parsed_body['data'].count).to eq(1)
+    context 'without params search' do
+      it 'renders a successful response' do
+        get '/api/v1/keywords', headers: headers
+        expect(response).to be_successful
+        expect(response.parsed_body['data'].count).to eq(1)
+        expect(response.parsed_body['meta_data']['page']).to eq(1)
+      end
+    end
+
+    context 'with params search' do
+      it 'renders a successful response' do
+        get '/api/v1/keywords', headers: headers, params: { query: keyword.content }
+        expect(response).to be_successful
+        expect(response.parsed_body['data'].count).to eq(1)
+        expect(response.parsed_body['meta_data']['total']).to eq(1)
+      end
+
+      it 'return blank with notfound params' do
+        get '/api/v1/keywords', headers: headers, params: { query: 'xxxxxx' }
+        expect(response).to be_successful
+        expect(response.parsed_body['data'].count).to eq(0)
+        expect(response.parsed_body['meta_data']['total']).to eq(0)
+      end
     end
   end
 

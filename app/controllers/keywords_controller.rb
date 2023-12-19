@@ -1,6 +1,8 @@
 class KeywordsController < ApplicationController
   def index
-    @keywords = current_user.keywords
+    keywords = current_user.keywords
+    keywords = keywords.search(search_params[:query]) if search_params[:query].present?
+    @pagy, @keywords = pagy(keywords)
   end
 
   def show
@@ -28,6 +30,10 @@ class KeywordsController < ApplicationController
 
   def keyword_params
     params.permit(:file)
+  end
+
+  def search_params
+    params.permit(:query)
   end
 
   def execute_keyword_service
