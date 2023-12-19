@@ -26,6 +26,12 @@ class KeywordsController < ApplicationController
     end
   end
 
+  def refresh
+    keyword = current_user.keywords.find_by(id: params[:keyword_id])
+    jid = KeywordScraperJob.perform_async(keyword.id)
+    render json: { jid: jid }
+  end
+
   private
 
   def keyword_params

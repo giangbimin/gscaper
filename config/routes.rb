@@ -1,6 +1,8 @@
 Rails.application.routes.draw do
   devise_for :users
-  resources :keywords, only: %i[index new create show]
+  resources :keywords, only: %i[index new create show] do
+    post :refresh
+  end
   root 'keywords#index'
 
   namespace :api do
