@@ -1,6 +1,6 @@
 class UserKeywordsService < ApplicationService
   JOB_INTERVAL = 2
-  attr_reader :keywords, :errors
+  attr_reader :keywords, :errors, :keyword_ids
 
   def initialize(user, file)
     @user = user
@@ -30,7 +30,7 @@ class UserKeywordsService < ApplicationService
     @keyword_ids = []
     ActiveRecord::Base.transaction do
       @keyword_list.each do |content|
-        @keyword_ids << create_keyword(content)
+        keyword_ids << create_keyword(content)
       end
     end
   rescue StandardError => e
@@ -45,7 +45,7 @@ class UserKeywordsService < ApplicationService
   end
 
   def perform_scraper
-    @keyword_ids.compact.each_with_index do |keyword_id, index|
+    keyword_ids.compact.each_with_index do |keyword_id, index|
       KeywordScraperJob.perform_in((index * JOB_INTERVAL).seconds, keyword_id)
     end
   end

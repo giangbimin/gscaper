@@ -1,41 +1,34 @@
 require 'rails_helper'
 
-RSpec.describe '/keywords', type: :request do
+RSpec.describe '/api/v1/keywords', type: :request do
   let(:current_user) { create(:user) }
-  before(:each) do
-    sign_in current_user
-  end
+  let(:token) { JwtService.encode({ user_id: current_user.id }) }
+  let(:headers) { { Authorization: "Bearer #{token}" } }
 
   describe 'GET /index' do
     let!(:keyword) { create(:keyword) }
     let!(:user_keyword) { create(:user_keyword, user: current_user, keyword: keyword) }
 
     it 'renders a successful response' do
-      get keywords_url
+      get '/api/v1/keywords', headers: headers
       expect(response).to be_successful
+      expect(response.parsed_body['data'].count).to eq(1)
     end
   end
 
   describe 'GET /show' do
     let!(:keyword) { create(:keyword) }
-    let!(:keyword2) { create(:keyword) }
     let!(:user_keyword) { create(:user_keyword, user: current_user, keyword: keyword) }
 
     it 'renders a successful response' do
-      get keyword_url(keyword)
+      get "/api/v1/keywords/#{keyword.id}", headers: headers
       expect(response).to be_successful
+      expect(response.parsed_body['data']['id']).to eq(keyword.id)
     end
 
-    it 'renders a not found response' do
-      get keyword_url(keyword2)
-      expect(response.status).to eq(404)
-    end
-  end
-
-  describe 'GET /new' do
-    it 'renders a successful response' do
-      get new_keyword_url
-      expect(response).to be_successful
+    it 'renders not_found' do
+      get '/api/v1/keywords/11111', headers: headers
+      expect(response.parsed_body['error']).to eq('Not Found')
     end
   end
 
@@ -46,32 +39,34 @@ RSpec.describe '/keywords', type: :request do
     context 'with valid parameters' do
       it 'creates a new Keyword' do
         expect do
-          post keywords_url, params: { file: valid_file }
+          post '/api/v1/keywords', headers: headers, params: { file: valid_file }
         end.to change(Keyword, :count).by(3)
       end
 
       it 'creates a new Userkeyword' do
         expect do
-          post keywords_url, params: { file: valid_file }
+          post '/api/v1/keywords', headers: headers, params: { file: valid_file }
         end.to change(UserKeyword, :count).by(3)
       end
 
       it 'redirects to the created keyword' do
-        post keywords_url, params: { file: valid_file }
-        expect(response).to redirect_to(keywords_url)
+        post '/api/v1/keywords', headers: headers, params: { file: valid_file }
+        expect(response).to have_http_status(:created)
+        expect(response.parsed_body['data']['ids'].count).to eq(3)
       end
     end
 
     context 'with invalid parameters' do
       it 'does not create a new Keyword' do
         expect do
-          post keywords_url, params: { file: invalid_file }
+          post '/api/v1/keywords', headers: headers, params: { file: invalid_file }
         end.to change(Keyword, :count).by(0)
       end
 
       it 'renders a response with 422 status (i.e. to display the :new template)' do
-        post keywords_url, params: { file: invalid_file }
-        expect(response).to have_http_status(:unprocessable_entity)
+        post '/api/v1/keywords', headers: headers, params: { file: invalid_file }
+        expect(response).to have_http_status(:bad_request)
+        expect(response.parsed_body['error']).to eq('Total keywords must between 1 and 100')
       end
     end
   end
