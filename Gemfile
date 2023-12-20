@@ -2,6 +2,7 @@ source 'https://rubygems.org'
 
 ruby '3.2.2'
 
+gem "dartsass-rails", "~> 0.5.0"
 gem 'devise', '~> 4.9'
 gem 'jwt'
 gem "pagy", "~> 6.2"
@@ -54,4 +55,3 @@ group :development do
   # gem 'spring'
 end
 
-gem "dartsass-rails", "~> 0.5.0"
