@@ -53,3 +53,5 @@ group :development do
   gem 'rack-mini-profiler'
   # gem 'spring'
 end
+
+gem "dartsass-rails", "~> 0.5.0"

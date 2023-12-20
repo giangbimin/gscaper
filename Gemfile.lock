@@ -95,6 +95,9 @@ GEM
     crack (0.4.5)
       rexml
     crass (1.0.6)
+    dartsass-rails (0.5.0)
+      railties (>= 6.0.0)
+      sass-embedded (~> 1.63)
     database_cleaner-active_record (2.1.0)
       activerecord (>= 5.a)
       database_cleaner-core (~> 2.0.0)
@@ -126,6 +129,8 @@ GEM
       i18n (>= 1.8.11, < 2)
     globalid (1.2.1)
       activesupport (>= 6.1)
+    google-protobuf (3.25.1-x86_64-darwin)
+    google-protobuf (3.25.1-x86_64-linux)
     hashdiff (1.0.1)
     httparty (0.21.0)
       mini_mime (>= 1.0.0)
@@ -282,6 +287,10 @@ GEM
     ruby2_keywords (0.0.5)
     ruby_audit (2.2.0)
       bundler-audit (~> 0.9.0)
+    sass-embedded (1.69.5-x86_64-darwin)
+      google-protobuf (~> 3.23)
+    sass-embedded (1.69.5-x86_64-linux-gnu)
+      google-protobuf (~> 3.23)
     shoulda-matchers (5.3.0)
       activesupport (>= 5.2.0)
     sidekiq (7.2.0)
@@ -338,6 +347,7 @@ DEPENDENCIES
   brakeman (~> 6.1)
   bundler-audit (~> 0.9.1)
   byebug
+  dartsass-rails (~> 0.5.0)
   database_cleaner-active_record
   debug
   devise (~> 4.9)
