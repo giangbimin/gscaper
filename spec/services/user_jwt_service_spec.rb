@@ -21,11 +21,10 @@ RSpec.describe UserJwtService, type: :service do
   end
 
   describe '.decode' do
-     context 'with a valid token' do
+    context 'with a valid token' do
       it 'decodes a JWT token and returns the payload' do
         redis_instance = instance_double(Redis, get: nil)
         allow(UserJwtService).to receive(:redis).and_return(redis_instance)
-
         result = described_class.decode(token)
         expect(result).to include('user_id' => user_id)
       end
@@ -33,7 +32,7 @@ RSpec.describe UserJwtService, type: :service do
 
     context 'with a blocked token' do
       it 'raises JWTRejectedError' do
-        redis_instance = instance_double(Redis, get: "true")
+        redis_instance = instance_double(Redis, get: 'true')
         allow(UserJwtService).to receive(:redis).and_return(redis_instance)
         expect { described_class.decode(token) }.to raise_error(UserJwtService::JwtRejectedError, 'Token invalid')
       end
@@ -41,7 +40,9 @@ RSpec.describe UserJwtService, type: :service do
 
     context 'with a invalid token type' do
       it 'decodes a JWT token and returns the payload' do
-        expect { described_class.decode(token, type: "refresh_token") }.to raise_error(UserJwtService::JwtTypeError, 'Token type invalid')
+        redis_instance = instance_double(Redis, get: nil)
+        allow(UserJwtService).to receive(:redis).and_return(redis_instance)
+        expect { described_class.decode(token, type: 'refresh_token') }.to raise_error(UserJwtService::JwtTypeError, 'Token type invalid')
       end
     end
   end
