@@ -2,15 +2,20 @@ require 'rails_helper'
 
 RSpec.describe '/api/v1/keywords', type: :request do
   let(:current_user) { create(:user) }
-  let(:token) { JwtService.encode({ user_id: current_user.id }) }
+  let(:token) { UserJwtService.generate_token(current_user.id) }
   let(:headers) { { Authorization: "Bearer #{token}" } }
+
+  before(:each) do
+    redis_instance = instance_double(Redis, get: nil, set: true)
+    allow(UserJwtService).to receive(:redis).and_return(redis_instance)
+  end
 
   describe 'GET /index' do
     let!(:keyword) { create(:keyword) }
     let!(:user_keyword) { create(:user_keyword, user: current_user, keyword: keyword) }
-
     context 'without params search' do
       it 'renders a successful response' do
+        allow(UserJwtService).to receive(:decode).and_return({ user_id: current_user.id })
         get '/api/v1/keywords', headers: headers
         expect(response).to be_successful
         expect(response.parsed_body['data'].count).to eq(1)

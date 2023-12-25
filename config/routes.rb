@@ -7,6 +7,8 @@ Rails.application.routes.draw do
 
   namespace :api do
     post 'sign_in', to: 'authentication#sign_in'
+    post 'refresh', to: 'authentication#refresh'
+    post 'sign_out', to: 'authentication#sign_out'
     namespace :v1 do
       resources :keywords, only: %i[index create show]
     end

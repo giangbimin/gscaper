@@ -61,3 +61,14 @@
   - [ ] Deploy the application to a cloud provider (e.g., Heroku, AWS, Google Cloud, or Digital Ocean).
 
 Note: The checklist indicates the completion status of each task. Update the checklist as tasks are completed, and consider deploying the application to a cloud provider for production use.
+
+## Feedback
+
+- **Refresh token**
+
+  - [x] endpoint POST api/refresh
+  - [x] endpoint POST api/sign_out
+  - [x] expired time of jwt: 15 mins
+  - [x] expired time of refresh token: 7 days
+  - [x] add refresh token to api/login response and cover with payload: data: {}
+  - [x] add block jwt with sign_out or block request from jwt
