@@ -14,14 +14,6 @@
 <html class="h-full">
   <body class="dark:bg-slate-900 bg-gray-100 flex h-full items-center py-16">
     <main class="w-full max-w-md mx-auto p-6">
-      <% if signed_in? %>
-        <%= link_to current_user.email, edit_user_registration_path %>
-        <%= button_to "Log out", destroy_user_session_path, method: :delete, data: { turbo: "false" } %>
-      <% else %>
-        <%= link_to "Log in", new_user_session_path %>
-        <%= link_to "Register", new_user_registration_path %>
-      <% end %>
-
       <%= render 'shared/flash_messages' %>
       <%= yield %>
     </main>
