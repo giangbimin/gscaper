@@ -1,13 +1,13 @@
 <% if flash.any? %>
   <% flash.each do |type, message| %>
     <% case type %>
-    <% when 'notice' %>
-      <div data-controller='flash-message' class="bg-red-500 text-sm text-white rounded-lg p-4" role="alert">
-        <span class="font-bold">Notice </span> <%= message %>
-      </div>
     <% when 'alert' %>
+      <div data-controller='flash-message' class="bg-red-500 text-sm text-white rounded-lg p-4" role="alert">
+        <span class="font-bold">Alert </span> <%= message %>
+      </div>
+    <% when 'notice' %>
       <div data-controller='flash-message' class="bg-teal-500 text-sm text-white rounded-lg p-4" role="alert">
-        <span class="font-bold">Alert </span><%= message %>
+        <span class="font-bold">Notice </span><%= message %>
       </div>
     <% else %>
       <div data-controller='flash-message' class="bg-blue-600 text-sm text-white rounded-lg p-4 dark:bg-blue-500" role="alert">
