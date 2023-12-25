@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe '/api/v1/keywords', type: :request do
   let(:current_user) { create(:user) }
-  let(:token) { JwtService.encode({ user_id: current_user.id }) }
+  let(:token) { UserJwtService.generate_token(current_user.id) }
   let(:headers) { { Authorization: "Bearer #{token}" } }
 
   describe 'GET /index' do
