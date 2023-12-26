@@ -22,7 +22,7 @@ module Api
         if user_order.save
           render json: UserOrderFormSerializer.new(user_order), status: :created
         else
-          render_errors({details: user_order.errors.full_messages.join(', '), code: :validation_error})
+          render_errors({ details: user_order.errors.full_messages.join(', '), code: :validation_error })
         end
       end
 

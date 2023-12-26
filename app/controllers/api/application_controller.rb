@@ -31,7 +31,7 @@ module Api
           per: pagy.items,
           page: pagy.page,
           pages: pagy.pages,
-          last: pagy.last,
+          last: pagy.last
         }
       }
     end

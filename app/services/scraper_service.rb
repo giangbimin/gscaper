@@ -37,7 +37,7 @@ class ScraperService < ApplicationService
     super
   end
 
-  def execute
+  def call
     validate
     return unless status
 

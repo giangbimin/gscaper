@@ -83,5 +83,5 @@ Note: The checklist indicates the completion status of each task. Update the che
 - **Json format and Source Code Organization**
   - [x] add Json Format Standard
   - [x] Source Code Organization Refactor
+  - [x] Follow Design Pattern for Services
   - [ ] Improve testing data definition
-  - [ ] Follow Design Pattern for Services
