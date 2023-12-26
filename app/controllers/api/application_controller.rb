@@ -19,5 +19,21 @@ module Api
     rescue StandardError, UserJwtService::JwtRejectedError
       render json: { error: 'Please Login' }, status: :unauthorized
     end
+
+    def render_errors(errors, status: :unprocessable_entity)
+      render json: { errors: errors }, status: status
+    end
+
+    def metadata(pagy)
+      {
+        meta: {
+          total: pagy.count,
+          per: pagy.items,
+          page: pagy.page,
+          pages: pagy.pages,
+          last: pagy.last,
+        }
+      }
+    end
   end
 end

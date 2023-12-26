@@ -18,6 +18,8 @@ gem 'turbo-rails'
 gem 'stimulus-rails'
 gem 'tailwindcss-rails'
 gem 'jbuilder'
+gem "apipie-rails", "~> 1.3"
+gem "jsonapi-serializer", "~> 2.2"
 
 # Use Redis adapter to run Action Cable in production
 gem 'redis', '>= 4.0.1'
@@ -46,6 +48,7 @@ group :test do
   gem 'webmock'
   gem 'shoulda-matchers', '~> 5.0'
   gem 'database_cleaner-active_record'
+  gem 'json_matchers'
 end
 
 group :development do
@@ -54,6 +57,3 @@ group :development do
   # gem 'spring'
 end
 
-gem "apipie-rails", "~> 1.3"
-
-gem "active_model_serializers", "~> 0.10.14"

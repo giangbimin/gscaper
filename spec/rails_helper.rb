@@ -9,6 +9,8 @@ require 'factory_bot_rails'
 require 'rspec/rails'
 require 'webmock/rspec'
 require 'database_cleaner/active_record'
+require "json_matchers/rspec"
+JsonMatchers.schema_root = 'spec/support/api/schemas'
 # Add additional requires below this line. Rails is not loaded until this point!
 
 # Requires supporting ruby files with custom matchers and macros, etc, in

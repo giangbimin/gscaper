@@ -18,58 +18,58 @@ RSpec.describe '/keywords', type: :request do
     sign_in current_user
   end
 
-  # describe 'GET /index' do
-  #   let!(:keyword) { create(:keyword, user_order: user_order, content: content) }
-  #   context 'without params search' do
-  #     it 'renders a successful response' do
-  #       get keywords_url
-  #       expect(response).to be_successful
-  #     end
-  #   end
+  describe 'GET /index' do
+    let!(:keyword) { create(:keyword, user_order: user_order, content: content) }
+    context 'without params search' do
+      it 'renders a successful response' do
+        get keywords_url
+        expect(response).to be_successful
+      end
+    end
 
-  #   context 'with params search' do
-  #     it 'renders a successful response' do
-  #       get keywords_url, params: { query: keyword.content }
-  #       expect(response).to be_successful
-  #     end
+    context 'with params search' do
+      it 'renders a successful response' do
+        get keywords_url, params: { query: keyword.content }
+        expect(response).to be_successful
+      end
 
-  #     it 'return blank with notfound params' do
-  #       get keywords_url, params: { query: 'xxxxxx' }
-  #       expect(response).to be_successful
-  #     end
-  #   end
-  # end
+      it 'return blank with notfound params' do
+        get keywords_url, params: { query: 'xxxxxx' }
+        expect(response).to be_successful
+      end
+    end
+  end
 
-  # describe 'GET /show' do
-  #   let!(:keyword) { create(:keyword, user_order: user_order, content: content) }
-  #   let!(:keyword2) { create(:keyword, content: content) }
+  describe 'GET /show' do
+    let!(:keyword) { create(:keyword, user_order: user_order, content: content) }
+    let!(:keyword2) { create(:keyword, content: content) }
 
-  #   it 'renders a successful response' do
-  #     get keyword_url(keyword)
-  #     expect(response).to be_successful
-  #   end
+    it 'renders a successful response' do
+      get keyword_url(keyword)
+      expect(response).to be_successful
+    end
 
-  #   it 'renders a not found response' do
-  #     get keyword_url(keyword2)
-  #     expect(response.status).to eq(404)
-  #   end
-  # end
+    it 'renders a not found response' do
+      get keyword_url(keyword2)
+      expect(response.status).to eq(404)
+    end
+  end
 
-  # describe 'POST /refresh' do
-  #   let!(:keyword) { create(:keyword, user_order: user_order, content: content) }
+  describe 'POST /refresh' do
+    let!(:keyword) { create(:keyword, user_order: user_order, content: content) }
 
-  #   it 'renders a successful response' do
-  #     post keyword_refresh_url(keyword)
-  #     expect(response).to be_successful
-  #   end
-  # end
+    it 'renders a successful response' do
+      post keyword_refresh_url(keyword)
+      expect(response).to be_successful
+    end
+  end
 
-  # describe 'GET /new' do
-  #   it 'renders a successful response' do
-  #     get new_keyword_url
-  #     expect(response).to be_successful
-  #   end
-  # end
+  describe 'GET /new' do
+    it 'renders a successful response' do
+      get new_keyword_url
+      expect(response).to be_successful
+    end
+  end
 
   let(:valid_file) { fixture_file_upload('/csv/sample.csv', 'text/csv') }
   let(:invalid_file) { fixture_file_upload('/csv/many.csv', 'text/csv') }

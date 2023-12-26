@@ -5,28 +5,24 @@ module Api
         keywords = @current_user.keywords
         keywords = keywords.search(search_params[:query]) if search_params[:query].present?
         pagy, keywords = pagy(keywords)
-        render json: {
-          data: keywords.select(:id, :content, :status, :total_link, :total_result, :total_ad)
-                        .as_json(except: %i[created_at updated_at html_code]),
-          meta_data: { page: pagy.page, per_page: pagy.items, total: pagy.count }
-        }, status: :ok
+        render json: KeywordsSerializer.new(keywords, metadata(pagy))
       end
 
       def show
         keyword = @current_user.keywords.find_by(id: params[:id])
         if keyword.present?
-          render json: { data: keyword.as_json }, status: :ok
+          render json: KeywordSerializer.new(keyword)
         else
-          render json: { error: 'Not Found' }, status: :not_found
+          render_errors({ details: 'Not Found', code: :not_found }, status: :not_found)
         end
       end
 
       def create
-        status, errors, keyword_ids = execute_keyword_service
-        if status
-          render json: { data: { ids: keyword_ids } }, status: :created
+        user_order = UserOrderForm.new(@current_user, keyword_params[:file])
+        if user_order.save
+          render json: UserOrderFormSerializer.new(user_order), status: :created
         else
-          render json: { error: errors.full_messages[0] }, status: :bad_request
+          render_errors({details: user_order.errors.full_messages.join(', '), code: :validation_error})
         end
       end
 
@@ -38,12 +34,6 @@ module Api
 
       def search_params
         params.permit(:query)
-      end
-
-      def execute_keyword_service
-        user_order = UserOrderForm.new(current_user, keyword_params[:file])
-        user_order.save
-        [user_order.valid?, user_order.errors, user_order.keyword_ids]
       end
     end
   end
