@@ -25,7 +25,7 @@ RSpec.describe '/api/sign_in', type: :request do
       it 'renders a successful response' do
         post '/api/sign_in', params: invalid_params
         expect(response).to have_http_status(:unauthorized)
-        expect(response.parsed_body['error']).to eq('Invalid email or password')
+        expect(response.parsed_body['errors'][0]['detail']).to eq('Invalid email or password')
       end
     end
   end
@@ -47,7 +47,7 @@ RSpec.describe '/api/sign_in', type: :request do
       it 'renders a successful response' do
         post '/api/refresh', params: { authentication: { refresh_token: expired_refresh_token } }
         expect(response).to have_http_status(:unauthorized)
-        expect(response.parsed_body['error']).to eq('Please Login')
+        expect(response.parsed_body['errors'][0]['detail']).to eq('Please Login')
       end
     end
 
@@ -57,7 +57,7 @@ RSpec.describe '/api/sign_in', type: :request do
         allow(UserJwtService).to receive(:redis).and_return(redis_instance)
         post '/api/refresh', params: { authentication: { refresh_token: refresh_token } }
         expect(response).to have_http_status(:unauthorized)
-        expect(response.parsed_body['error']).to eq('Please Login')
+        expect(response.parsed_body['errors'][0]['detail']).to eq('Please Login')
       end
     end
 
@@ -67,7 +67,7 @@ RSpec.describe '/api/sign_in', type: :request do
         allow(UserJwtService).to receive(:redis).and_return(redis_instance)
         post '/api/refresh', params: { authentication: { refresh_token: token } }
         expect(response).to have_http_status(:unauthorized)
-        expect(response.parsed_body['error']).to eq('Invalid token')
+        expect(response.parsed_body['errors'][0]['detail']).to eq('Invalid token')
       end
     end
   end
@@ -79,7 +79,6 @@ RSpec.describe '/api/sign_in', type: :request do
         allow(UserJwtService).to receive(:redis).and_return(redis_instance)
         post '/api/sign_out', headers: headers
         expect(response).to be_successful
-        expect(response.parsed_body['data']['message']).to eq('Logout Success')
       end
     end
 
@@ -89,7 +88,7 @@ RSpec.describe '/api/sign_in', type: :request do
         allow(UserJwtService).to receive(:redis).and_return(redis_instance)
         post '/api/sign_out'
         expect(response).to have_http_status(:unauthorized)
-        expect(response.parsed_body['error']).to eq('Please Login')
+        expect(response.parsed_body['errors'][0]['detail']).to eq('Please Login')
       end
     end
   end

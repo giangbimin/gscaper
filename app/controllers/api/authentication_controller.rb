@@ -8,7 +8,7 @@ module Api
       if user&.valid_password?(login_params[:password])
         render json: { data: login_response(user.id) }, status: :ok
       else
-        render json: { error: 'Invalid email or password' }, status: :unauthorized
+        render_errors([{ detail: 'Invalid email or password', code: :unauthorized }], status: :unauthorized)
       end
     end
 
@@ -16,14 +16,14 @@ module Api
       payload = UserJwtService.decode(refresh_params[:refresh_token], type: 'refresh_token')
       render json: { data: refresh_response(payload[:user_id]) }, status: :ok
     rescue JWT::DecodeError, JWT::ExpiredSignature, JWT::VerificationError, UserJwtService::JwtTypeError
-      render json: { error: 'Invalid token' }, status: :unauthorized
+      render_errors([{ detail: 'Invalid token', code: :unauthorized }], status: :unauthorized)
     rescue StandardError, UserJwtService::JwtRejectedError
-      render json: { error: 'Please Login' }, status: :unauthorized
+      render_errors([{ detail: 'Please Login', code: :unauthorized }], status: :unauthorized)
     end
 
     def sign_out
       UserJwtService.block(@jwt_token, @payload)
-      render json: { data: { message: 'Logout Success' } }, status: :ok
+      head :ok
     end
 
     private

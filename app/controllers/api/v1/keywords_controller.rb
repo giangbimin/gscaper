@@ -13,16 +13,16 @@ module Api
         if keyword.present?
           render json: KeywordSerializer.new(keyword)
         else
-          render_errors({ details: 'Not Found', code: :not_found }, status: :not_found)
+          head :not_found
         end
       end
 
       def create
         user_order = UserOrderForm.new(@current_user, keyword_params[:file])
         if user_order.save
-          render json: UserOrderFormSerializer.new(user_order), status: :created
+          head :created
         else
-          render_errors({ details: user_order.errors.full_messages.join(', '), code: :validation_error })
+          render_errors([{ detail: user_order.errors.full_messages.join(', '), code: :validation_error }])
         end
       end
 
