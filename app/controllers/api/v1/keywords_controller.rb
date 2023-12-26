@@ -22,7 +22,7 @@ module Api
         if user_order.save
           head :created
         else
-          render_errors([{ detail: user_order.errors.full_messages.join(', '), code: :validation_error }])
+          render_errors({ detail: user_order.errors.full_messages.join(', '), code: :validation_error })
         end
       end
 
