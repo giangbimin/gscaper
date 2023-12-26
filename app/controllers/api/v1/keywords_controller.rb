@@ -26,7 +26,7 @@ module Api
         if status
           render json: { data: { ids: keyword_ids } }, status: :created
         else
-          render json: { error: errors.values.join(', ') }, status: :bad_request
+          render json: { error: errors.full_messages[0] }, status: :bad_request
         end
       end
 
@@ -41,9 +41,9 @@ module Api
       end
 
       def execute_keyword_service
-        service = UserKeywordsService.new(@current_user, keyword_params[:file])
-        service.execute
-        [service.status, service.errors, service.keyword_ids]
+        user_order = UserOrderForm.new(current_user, keyword_params[:file])
+        user_order.save
+        [user_order.valid?, user_order.errors, user_order.keyword_ids]
       end
     end
   end

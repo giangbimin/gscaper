@@ -19,7 +19,7 @@ class KeywordsController < ApplicationController
       if status
         format.html { redirect_to keywords_url, notice: 'Keywords was successfully created.' }
       else
-        flash.alert = errors.values[0]
+        flash.alert = errors.full_messages[0]
         format.html { render :new, status: :unprocessable_entity }
       end
     end
@@ -33,7 +33,7 @@ class KeywordsController < ApplicationController
   private
 
   def keyword_params
-    params.permit(:file)
+    params.require(:keywords).permit(:file)
   end
 
   def search_params
@@ -41,9 +41,9 @@ class KeywordsController < ApplicationController
   end
 
   def execute_keyword_service
-    service = UserKeywordsService.new(current_user, keyword_params[:file])
-    service.execute
-    [service.status, service.errors]
+    user_order = UserOrderForm.new(current_user, keyword_params[:file])
+    user_order.save
+    [user_order.valid?, user_order.errors]
   end
 
   def find_keyword

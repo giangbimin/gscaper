@@ -5,7 +5,7 @@ RSpec.describe 'keywords/new', type: :view do
     render
 
     assert_select 'form[action=?][method=?]', keywords_path, 'post' do
-      assert_select 'input[name=?]', 'file'
+      assert_select 'input[name=?]', 'keywords[file]'
     end
   end
 end

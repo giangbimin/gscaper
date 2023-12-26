@@ -1,9 +1,20 @@
 require 'rails_helper'
+require 'sidekiq/testing'
 
 RSpec.describe '/api/v1/keywords', type: :request do
   let(:current_user) { create(:user) }
+  let(:content) { Faker::Book.title }
+  let(:user_order) { create(:user_order, user: current_user, content: content) }
   let(:token) { UserJwtService.generate_token(current_user.id) }
   let(:headers) { { Authorization: "Bearer #{token}" } }
+
+  before do
+    Sidekiq::Testing.fake!
+  end
+
+  after do
+    Sidekiq::Testing.inline!
+  end
 
   before(:each) do
     redis_instance = instance_double(Redis, get: nil, set: true)
@@ -11,8 +22,7 @@ RSpec.describe '/api/v1/keywords', type: :request do
   end
 
   describe 'GET /index' do
-    let!(:keyword) { create(:keyword) }
-    let!(:user_keyword) { create(:user_keyword, user: current_user, keyword: keyword) }
+    let!(:keyword) { create(:keyword, user_order: user_order, content: content) }
     context 'without params search' do
       it 'renders a successful response' do
         allow(UserJwtService).to receive(:decode).and_return({ user_id: current_user.id })
@@ -41,8 +51,7 @@ RSpec.describe '/api/v1/keywords', type: :request do
   end
 
   describe 'GET /show' do
-    let!(:keyword) { create(:keyword) }
-    let!(:user_keyword) { create(:user_keyword, user: current_user, keyword: keyword) }
+    let!(:keyword) { create(:keyword, user_order: user_order, content: content) }
 
     it 'renders a successful response' do
       get "/api/v1/keywords/#{keyword.id}", headers: headers
@@ -67,10 +76,10 @@ RSpec.describe '/api/v1/keywords', type: :request do
         end.to change(Keyword, :count).by(3)
       end
 
-      it 'creates a new Userkeyword' do
+      it 'creates a new UserOrder' do
         expect do
           post '/api/v1/keywords', headers: headers, params: { file: valid_file }
-        end.to change(UserKeyword, :count).by(3)
+        end.to change(UserOrder, :count).by(1)
       end
 
       it 'redirects to the created keyword' do
@@ -90,7 +99,7 @@ RSpec.describe '/api/v1/keywords', type: :request do
       it 'renders a response with 422 status (i.e. to display the :new template)' do
         post '/api/v1/keywords', headers: headers, params: { file: invalid_file }
         expect(response).to have_http_status(:bad_request)
-        expect(response.parsed_body['error']).to eq('Total keywords must between 1 and 100')
+        expect(response.parsed_body['error']).to eq('Total keywords must be between 1 and 100')
       end
     end
   end
