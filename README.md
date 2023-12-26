@@ -72,3 +72,10 @@ Note: The checklist indicates the completion status of each task. Update the che
   - [x] expired time of refresh token: 7 days
   - [x] add refresh token to api/login response and cover with payload: data: {}
   - [x] add block jwt with sign_out or block request from jwt
+
+- **Update Keyword Logic**
+  - [x] Refactor using Form Object and Validator object
+  - [x] Change Logic Keywords for user can create same keyword for difference orders
+  - [x] Remove old models and useless codes
+  - [x] Do not Check unique for keywords
+  - [x] Update Test Cases

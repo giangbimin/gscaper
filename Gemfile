@@ -53,3 +53,7 @@ group :development do
   gem 'rack-mini-profiler'
   # gem 'spring'
 end
+
+gem "apipie-rails", "~> 1.3"
+
+gem "active_model_serializers", "~> 0.10.14"

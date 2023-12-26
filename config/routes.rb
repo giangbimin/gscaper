@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  apipie
   devise_for :users
   resources :keywords, only: %i[index new create show] do
     post :refresh

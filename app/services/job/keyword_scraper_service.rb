@@ -12,7 +12,7 @@ module Job
     def execute
       find_keyword
       return unless status
-      return if keyword.processed? && !force_refresh
+      return if keyword.processed_status? && !force_refresh
 
       scraping
       update_keyword
