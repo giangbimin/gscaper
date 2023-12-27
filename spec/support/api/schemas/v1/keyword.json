@@ -1,0 +1,47 @@
+{
+  "$schema": "http://json-schema.org/draft-06/schema#",
+  "type": "object",
+  "properties": {
+    "data": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string",
+          "enum": ["keyword"]
+        },
+        "attributes": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "integer"
+            },
+            "content": {
+              "type": "string"
+            },
+            "status": {
+              "type": "string"
+            },
+            "total_link": {
+              "type": "integer"
+            },
+            "total_result": {
+              "type": "integer"
+            },
+            "total_ad": {
+              "type": "integer"
+            },
+            "html_code": {
+              "type": "string"
+            }
+          },
+          "required": ["id", "content", "status", "total_link", "total_result", "total_ad", "html_code"]
+        }
+      },
+      "required": ["id", "type", "attributes"]
+    }
+  },
+  "required": ["data"]
+}

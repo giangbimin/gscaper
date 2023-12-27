@@ -2,11 +2,8 @@
 require 'rails_helper'
 
 RSpec.describe Job::KeywordScraperService, type: :service do
-  let(:content) { 'google' }
-  let(:keyword) { create(:keyword, content: content) }
-  let(:body) { file_fixture('/http/google.txt') }
-  let(:scraper_service_response) { { total_link: 78, total_result: 25_270_000_000, total_ad: 0, html_code: body.read } }
-  let(:processed) { false }
+  let(:keyword) { create(:keyword) }
+  let(:scraper_service_response) { { total_link: 78, total_result: 25_270_000_000, total_ad: 0, html_code: file_fixture('/http/stub_body.txt').read } }
 
   describe '#initialize' do
     it 'initializes errors as an empty hash' do
@@ -15,13 +12,13 @@ RSpec.describe Job::KeywordScraperService, type: :service do
     end
   end
 
-  describe '#execute' do
+  describe '#call' do
     subject(:service) { described_class.new(keyword.id) }
     subject(:execute_service) { service.call }
 
     context 'when the keyword is found and not processed' do
       before do
-        allow(ScraperService).to receive_message_chain(:new, :execute).and_return(scraper_service_response)
+        allow(ScraperService).to receive_message_chain(:new, :call).and_return(scraper_service_response)
         allow(ScraperService).to receive_message_chain(:new, :status).and_return(true)
       end
       it 'calls find_keyword, scraping, and update_keyword' do
@@ -48,7 +45,7 @@ RSpec.describe Job::KeywordScraperService, type: :service do
     end
 
     context 'when the keyword is already processed' do
-      let(:keyword) { create(:keyword, content: content, status: :processed) }
+      let(:keyword) { create(:keyword, status: :processed) }
 
       it 'does not call scraping and update_keyword' do
         execute_service
@@ -57,9 +54,9 @@ RSpec.describe Job::KeywordScraperService, type: :service do
     end
 
     context 'when the keyword is already processed but force refresh' do
-      let(:keyword) { create(:keyword, content: content, status: :processed) }
+      let(:keyword) { create(:keyword, status: :processed) }
       before do
-        allow(ScraperService).to receive_message_chain(:new, :execute).and_return(scraper_service_response)
+        allow(ScraperService).to receive_message_chain(:new, :call).and_return(scraper_service_response)
         allow(ScraperService).to receive_message_chain(:new, :status).and_return(true)
       end
 
@@ -72,7 +69,7 @@ RSpec.describe Job::KeywordScraperService, type: :service do
 
     context 'when an exception occurs during scraping' do
       before do
-        allow(ScraperService).to receive_message_chain(:new, :execute).and_raise(StandardError, 'Some error')
+        allow(ScraperService).to receive_message_chain(:new, :call).and_raise(StandardError, 'Some error')
       end
 
       it 'sets an error message' do

@@ -10,7 +10,8 @@ require 'rspec/rails'
 require 'webmock/rspec'
 require 'database_cleaner/active_record'
 require "json_matchers/rspec"
-JsonMatchers.schema_root = 'spec/support/api/schemas'
+require "vcr"
+
 # Add additional requires below this line. Rails is not loaded until this point!
 
 # Requires supporting ruby files with custom matchers and macros, etc, in
@@ -84,4 +85,9 @@ RSpec.configure do |config|
       example.run
     end
   end
+end
+JsonMatchers.schema_root = 'spec/support/api/schemas'
+VCR.configure do |config|
+  config.cassette_library_dir =  Rails.root.join('spec', 'fixtures', 'vcr')
+  config.hook_into :webmock
 end

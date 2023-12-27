@@ -1,0 +1,71 @@
+{
+  "$schema": "http://json-schema.org/draft-06/schema#",
+  "type": "object",
+  "properties": {
+    "data": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": [
+        {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "type": {
+              "type": "string",
+              "enum": ["keywords"]
+            },
+            "attributes": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "integer"
+                },
+                "content": {
+                  "type": "string"
+                },
+                "status": {
+                  "type": "string"
+                },
+                "total_link": {
+                  "type": "integer"
+                },
+                "total_result": {
+                  "type": "integer"
+                },
+                "total_ad": {
+                  "type": "integer"
+                }
+              },
+              "required": ["id", "content", "status", "total_link", "total_result", "total_ad"]
+            }
+          },
+          "required": ["id", "type", "attributes"]
+        }
+      ]
+    },
+    "meta": {
+      "type": "object",
+      "properties": {
+        "total": {
+          "type": "integer"
+        },
+        "per": {
+          "type": "integer"
+        },
+        "page": {
+          "type": "integer"
+        },
+        "pages": {
+          "type": "integer"
+        },
+        "last": {
+          "type": "integer"
+        }
+      },
+      "required": ["total", "per", "page", "pages", "last"]
+    }
+  },
+  "required": ["data", "meta"]
+}

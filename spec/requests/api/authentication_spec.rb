@@ -16,6 +16,7 @@ RSpec.describe '/api/sign_in', type: :request do
         allow(UserJwtService).to receive(:generate_refresh_token).and_return(refresh_token)
         post '/api/sign_in', params: valid_params
         expect(response).to be_successful
+        expect(response.body).to match_response_schema('authentication', strict: true)
         expect(response.parsed_body['meta']['token']).to eq(token)
         expect(response.parsed_body['meta']['refresh_token']).to eq(refresh_token)
       end
@@ -25,6 +26,7 @@ RSpec.describe '/api/sign_in', type: :request do
       it 'renders a successful response' do
         post '/api/sign_in', params: invalid_params
         expect(response).to have_http_status(:unauthorized)
+        expect(response.body).to match_response_schema('errors', strict: true)
         expect(response.parsed_body['errors'][0]['detail']).to eq('Invalid email or password')
       end
     end
@@ -38,6 +40,7 @@ RSpec.describe '/api/sign_in', type: :request do
         allow(UserJwtService).to receive(:generate_token).and_return(new_token)
         post '/api/refresh', params: { authentication: { refresh_token: refresh_token } }
         expect(response).to be_successful
+        expect(response.body).to match_response_schema('authentication', strict: true)
         expect(response.parsed_body['meta']['token']).to eq(new_token)
         expect(response.parsed_body['meta']['refresh_token']).to eq(refresh_token)
       end
@@ -47,6 +50,7 @@ RSpec.describe '/api/sign_in', type: :request do
       it 'renders a successful response' do
         post '/api/refresh', params: { authentication: { refresh_token: expired_refresh_token } }
         expect(response).to have_http_status(:unauthorized)
+        expect(response.body).to match_response_schema('errors', strict: true)
         expect(response.parsed_body['errors'][0]['detail']).to eq('Please Login')
       end
     end
@@ -57,6 +61,7 @@ RSpec.describe '/api/sign_in', type: :request do
         allow(UserJwtService).to receive(:redis).and_return(redis_instance)
         post '/api/refresh', params: { authentication: { refresh_token: refresh_token } }
         expect(response).to have_http_status(:unauthorized)
+        expect(response.body).to match_response_schema('errors', strict: true)
         expect(response.parsed_body['errors'][0]['detail']).to eq('Please Login')
       end
     end
@@ -67,6 +72,7 @@ RSpec.describe '/api/sign_in', type: :request do
         allow(UserJwtService).to receive(:redis).and_return(redis_instance)
         post '/api/refresh', params: { authentication: { refresh_token: token } }
         expect(response).to have_http_status(:unauthorized)
+        expect(response.body).to match_response_schema('errors', strict: true)
         expect(response.parsed_body['errors'][0]['detail']).to eq('Invalid token')
       end
     end
@@ -88,6 +94,7 @@ RSpec.describe '/api/sign_in', type: :request do
         allow(UserJwtService).to receive(:redis).and_return(redis_instance)
         post '/api/sign_out'
         expect(response).to have_http_status(:unauthorized)
+        expect(response.body).to match_response_schema('errors', strict: true)
         expect(response.parsed_body['errors'][0]['detail']).to eq('Please Login')
       end
     end
