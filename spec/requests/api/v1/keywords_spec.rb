@@ -23,13 +23,16 @@ RSpec.describe '/api/v1/keywords', type: :request do
 
   describe 'GET /index' do
     let!(:keyword) { create(:keyword, user_order: user_order, content: content) }
+    let!(:keyword2) { create(:keyword, user_order: user_order) }
     context 'without params search' do
       it 'renders a successful response' do
         allow(UserJwtService).to receive(:decode).and_return({ user_id: current_user.id })
         get '/api/v1/keywords', headers: headers
         expect(response).to be_successful
-        expect(response.parsed_body['data'].count).to eq(1)
+        expect(response.body).to match_response_schema('v1/keywords', strict: true)
+        expect(response.parsed_body['data'].count).to eq(2)
         expect(response.parsed_body['meta']['page']).to eq(1)
+        expect(response.parsed_body['meta']['total']).to eq(2)
       end
     end
 
@@ -37,6 +40,7 @@ RSpec.describe '/api/v1/keywords', type: :request do
       it 'renders a successful response' do
         get '/api/v1/keywords', headers: headers, params: { query: keyword.content }
         expect(response).to be_successful
+        expect(response.body).to match_response_schema('v1/keywords', strict: true)
         expect(response.parsed_body['data'].count).to eq(1)
         expect(response.parsed_body['meta']['total']).to eq(1)
       end
@@ -56,6 +60,7 @@ RSpec.describe '/api/v1/keywords', type: :request do
     it 'renders a successful response' do
       get "/api/v1/keywords/#{keyword.id}", headers: headers
       expect(response).to be_successful
+      expect(response.body).to match_response_schema('v1/keyword', strict: true)
       expect(response.parsed_body['data']['id'].to_i).to eq(keyword.id)
     end
 
@@ -98,6 +103,7 @@ RSpec.describe '/api/v1/keywords', type: :request do
       it 'renders a response with 422 status (i.e. to display the :new template)' do
         post '/api/v1/keywords', headers: headers, params: { file: invalid_file }
         expect(response).to have_http_status(:unprocessable_entity)
+        expect(response.body).to match_response_schema('errors', strict: true)
         expect(response.parsed_body['errors'][0]['detail']).to eq('Total keywords must be between 1 and 100')
       end
     end
