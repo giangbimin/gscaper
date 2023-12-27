@@ -14,12 +14,12 @@ class KeywordsController < ApplicationController
   end
 
   def create
-    status, errors = execute_keyword_service
+    user_order = UserOrderForm.new(current_user, keyword_params[:file])
     respond_to do |format|
-      if status
+      if user_order.save
         format.html { redirect_to keywords_url, notice: 'Keywords was successfully created.' }
       else
-        flash.alert = errors.full_messages[0]
+        flash.alert = user_order.errors.full_messages[0]
         format.html { render :new, status: :unprocessable_entity }
       end
     end
@@ -38,12 +38,6 @@ class KeywordsController < ApplicationController
 
   def search_params
     params.permit(:query)
-  end
-
-  def execute_keyword_service
-    user_order = UserOrderForm.new(current_user, keyword_params[:file])
-    user_order.save
-    [user_order.valid?, user_order.errors]
   end
 
   def find_keyword

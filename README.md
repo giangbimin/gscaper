@@ -79,3 +79,10 @@ Note: The checklist indicates the completion status of each task. Update the che
   - [x] Remove old models and useless codes
   - [x] Do not Check unique for keywords
   - [x] Update Test Cases
+
+- **Json format and Source Code Organization**
+  - [x] add Json Format Standard
+  - [x] Source Code Organization Refactor
+  - [x] Follow Design Pattern for Services
+  - [ ] Improve testing data definition
+  - [ ] create api documentation

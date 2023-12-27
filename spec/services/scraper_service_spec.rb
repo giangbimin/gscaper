@@ -19,7 +19,7 @@ RSpec.describe ScraperService, type: :service do
 
   describe '#execute' do
     subject(:service) { described_class.new(keyword) }
-    subject(:execute_service) { service.execute }
+    subject(:execute_service) { service.call }
 
     context 'when the keyword is blank' do
       let(:keyword) { '' }

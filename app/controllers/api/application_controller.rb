@@ -15,9 +15,18 @@ module Api
       @payload = UserJwtService.decode(@jwt_token)
       @current_user = User.find(@payload[:user_id])
     rescue JWT::DecodeError, JWT::ExpiredSignature, JWT::VerificationError, UserJwtService::JwtTypeError
-      render json: { error: 'Invalid token' }, status: :unauthorized
+      render_errors({ detail: 'Invalid token', code: :unauthorized }, status: :unauthorized)
     rescue StandardError, UserJwtService::JwtRejectedError
-      render json: { error: 'Please Login' }, status: :unauthorized
+      render_errors({ detail: 'Please Login', code: :unauthorized }, status: :unauthorized)
+    end
+
+    def render_errors(errors, status: :unprocessable_entity)
+      render json: ErrorSerializer.new(errors).call, status: status
+    end
+
+    def metadata(pagy)
+      meta = { total: pagy.count, per: pagy.items, page: pagy.page, pages: pagy.pages, last: pagy.last }
+      MetaSerializer.new(meta).call
     end
   end
 end

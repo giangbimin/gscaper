@@ -5,11 +5,10 @@ module Job
 
     def initialize(keyword_id)
       @keyword_id = keyword_id
-      @force_refresh = force_refresh
       super
     end
 
-    def execute
+    def call
       find_keyword
       return unless status
       return if keyword.processed_status? && !force_refresh
@@ -27,7 +26,7 @@ module Job
 
     def scraping
       scraper = ScraperService.new(keyword.content)
-      @scraper_response = scraper.execute
+      @scraper_response = scraper.call
       errors.merge!(scraper.errors) unless scraper.status
     rescue StandardError => e
       errors[:base] = e.message

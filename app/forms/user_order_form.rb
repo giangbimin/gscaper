@@ -3,13 +3,14 @@ class UserOrderForm
   include ActiveModel::Model
   validates_with CsvKeywordsValidator
 
-  attr_reader :file, :current_user, :keywords, :keyword_ids
+  attr_reader :file, :current_user, :keywords, :keyword_ids, :jids, :id
 
   def initialize(current_user, file)
     @current_user = current_user
     @file = file
     @keywords = []
     @keyword_ids = []
+    @jids = []
   end
 
   def save
@@ -18,8 +19,12 @@ class UserOrderForm
     preview
     return false if keywords.blank?
 
-    save_keywords
+    return false unless save_keywords
+
     perform_scraper
+    true
+  rescue StandardError
+    false
   end
 
   def preview
@@ -53,7 +58,8 @@ class UserOrderForm
   def perform_scraper
     keyword_ids.compact.each_with_index do |keyword_id, index|
       jid = KeywordScraperJob.perform_in((index * JOB_INTERVAL).seconds, keyword_id)
-      Rails.logger.debug { "enqueue job #{jid}, keyword: #{keyword_id}" } unless Rails.env.test?
+      @jids << jid
     end
+    Rails.logger.debug { "enqueue job #{@jids}, keyword: #{keyword_idss}" } unless Rails.env.test?
   end
 end

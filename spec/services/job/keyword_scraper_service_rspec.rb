@@ -17,7 +17,7 @@ RSpec.describe Job::KeywordScraperService, type: :service do
 
   describe '#execute' do
     subject(:service) { described_class.new(keyword.id) }
-    subject(:execute_service) { service.execute }
+    subject(:execute_service) { service.call }
 
     context 'when the keyword is found and not processed' do
       before do

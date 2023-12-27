@@ -29,7 +29,7 @@ RSpec.describe '/api/v1/keywords', type: :request do
         get '/api/v1/keywords', headers: headers
         expect(response).to be_successful
         expect(response.parsed_body['data'].count).to eq(1)
-        expect(response.parsed_body['meta_data']['page']).to eq(1)
+        expect(response.parsed_body['meta']['page']).to eq(1)
       end
     end
 
@@ -38,14 +38,14 @@ RSpec.describe '/api/v1/keywords', type: :request do
         get '/api/v1/keywords', headers: headers, params: { query: keyword.content }
         expect(response).to be_successful
         expect(response.parsed_body['data'].count).to eq(1)
-        expect(response.parsed_body['meta_data']['total']).to eq(1)
+        expect(response.parsed_body['meta']['total']).to eq(1)
       end
 
       it 'return blank with notfound params' do
         get '/api/v1/keywords', headers: headers, params: { query: 'xxxxxx' }
         expect(response).to be_successful
         expect(response.parsed_body['data'].count).to eq(0)
-        expect(response.parsed_body['meta_data']['total']).to eq(0)
+        expect(response.parsed_body['meta']['total']).to eq(0)
       end
     end
   end
@@ -56,12 +56,12 @@ RSpec.describe '/api/v1/keywords', type: :request do
     it 'renders a successful response' do
       get "/api/v1/keywords/#{keyword.id}", headers: headers
       expect(response).to be_successful
-      expect(response.parsed_body['data']['id']).to eq(keyword.id)
+      expect(response.parsed_body['data']['id'].to_i).to eq(keyword.id)
     end
 
     it 'renders not_found' do
       get '/api/v1/keywords/11111', headers: headers
-      expect(response.parsed_body['error']).to eq('Not Found')
+      expect(response).to be_not_found
     end
   end
 
@@ -85,7 +85,6 @@ RSpec.describe '/api/v1/keywords', type: :request do
       it 'redirects to the created keyword' do
         post '/api/v1/keywords', headers: headers, params: { file: valid_file }
         expect(response).to have_http_status(:created)
-        expect(response.parsed_body['data']['ids'].count).to eq(3)
       end
     end
 
@@ -98,8 +97,8 @@ RSpec.describe '/api/v1/keywords', type: :request do
 
       it 'renders a response with 422 status (i.e. to display the :new template)' do
         post '/api/v1/keywords', headers: headers, params: { file: invalid_file }
-        expect(response).to have_http_status(:bad_request)
-        expect(response.parsed_body['error']).to eq('Total keywords must be between 1 and 100')
+        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response.parsed_body['errors'][0]['detail']).to eq('Total keywords must be between 1 and 100')
       end
     end
   end
